@@ -57,4 +57,10 @@ public class AirportServiceImpl implements AirportService {
 
         return AirportMapper.mapToDto(updatedAirport);
     }
+
+    @Override
+    public void deleteAirport(int id) {
+        Airport airport = airportRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+        airportRepository.delete(airport);
+    }
 }

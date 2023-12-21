@@ -10,6 +10,5 @@ public interface AirportService {
     AirportDto getAirportById(int id);
     List<AirportDto> getAllAirports();
     AirportDto updateAirport(AirportDto airportDto, int id);
-
-    /*void deleteAirport(int id);*/
+    void deleteAirport(int id);
 }
