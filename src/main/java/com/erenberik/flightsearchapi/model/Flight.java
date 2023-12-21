@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
@@ -35,4 +36,5 @@ public class Flight {
     private LocalDateTime arrivalTime;
 
     private float price;
+
 }

@@ -12,8 +12,17 @@ import lombok.NoArgsConstructor;
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    private String city;
+    private String name;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "city_id"
+    )
+    private City city;
+
+    public String getAirportFullName() {
+        return String.format("%s - %s", getCity().getName(), getName());
+    }
 }
