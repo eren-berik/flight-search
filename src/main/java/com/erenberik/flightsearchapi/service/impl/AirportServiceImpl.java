@@ -1,6 +1,7 @@
 package com.erenberik.flightsearchapi.service.impl;
 
 import com.erenberik.flightsearchapi.dto.AirportDto;
+import com.erenberik.flightsearchapi.exception.FlightNotFoundException;
 import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.repository.AirportRepository;
 import com.erenberik.flightsearchapi.mapper.AirportMapper;
@@ -22,5 +23,12 @@ public class AirportServiceImpl implements AirportService {
         Airport newAirport = airportRepository.save(airport);
 
         return AirportMapper.mapToDto(newAirport);
+    }
+
+    @Override
+    public AirportDto getAirportById(int id) {
+        Airport airport = airportRepository.findById(id).orElseThrow(()-> new FlightNotFoundException("Flight could not be found!"));
+
+        return AirportMapper.mapToDto(airport);
     }
 }

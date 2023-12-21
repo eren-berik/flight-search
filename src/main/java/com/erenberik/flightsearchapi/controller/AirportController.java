@@ -23,4 +23,11 @@ public class AirportController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @GetMapping("airport/{id}")
+    public ResponseEntity<AirportDto> getAirportById(@PathVariable int id) {
+        AirportDto response = airportService.getAirportById(id);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

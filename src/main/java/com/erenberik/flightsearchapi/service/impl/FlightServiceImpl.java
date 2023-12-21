@@ -24,12 +24,14 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public FlightDto createFlight(Flight flight) {
         Flight newFlight = flightRepository.save(flight);
+
         return FlightMapper.mapToDto(newFlight);
     }
 
     @Override
     public FlightDto getFlightById(int id) {
         Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+
         return FlightMapper.mapToDto(flight);
     }
 
@@ -56,6 +58,7 @@ public class FlightServiceImpl implements FlightService {
         flight.setPrice(flightDto.getPrice());
 
         Flight updatedFlight = flightRepository.save(flight);
+
         return FlightMapper.mapToDto(updatedFlight);
     }
 
