@@ -1,9 +1,13 @@
 package com.erenberik.flightsearchapi.model;
 
+import com.erenberik.flightsearchapi.helper.AirportDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,17 +18,21 @@ public class Flight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "departure_airport")
-    private String departureAirport;
+    @JsonDeserialize(using = AirportDeserializer.class)
+    @ManyToOne
+    @JoinColumn(name = "departure_airport")
+    private Airport departureAirport;
 
-    @Column(name = "arrival_airport")
-    private String arrivalAirport;
+    @JsonDeserialize(using = AirportDeserializer.class)
+    @ManyToOne
+    @JoinColumn(name = "arrival_airport")
+    private Airport arrivalAirport;
 
     @Column(name = "departure_time")
-    private String departureTime;
+    private LocalDateTime departureTime;
 
     @Column(name = "arrival_time")
-    private String arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private float price;
 }
