@@ -39,4 +39,11 @@ public class AirportController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PutMapping("airport/{id}")
+    public ResponseEntity<AirportDto> updateAirport(@RequestBody AirportDto airportDto, @PathVariable int id) {
+        AirportDto response = airportService.updateAirport(airportDto, id);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

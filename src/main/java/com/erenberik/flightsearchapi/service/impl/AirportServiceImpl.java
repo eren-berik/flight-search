@@ -45,4 +45,16 @@ public class AirportServiceImpl implements AirportService {
 
         return airportDtoList;
     }
+
+    @Override
+    public AirportDto updateAirport(AirportDto airportDto, int id) {
+        Airport airport = airportRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+
+        airport.setId(airportDto.getId());
+        airport.setCity(airportDto.getCity());
+
+        Airport updatedAirport = airportRepository.save(airport);
+
+        return AirportMapper.mapToDto(updatedAirport);
+    }
 }
