@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/")
 public class AirportController {
@@ -27,6 +29,13 @@ public class AirportController {
     @GetMapping("airport/{id}")
     public ResponseEntity<AirportDto> getAirportById(@PathVariable int id) {
         AirportDto response = airportService.getAirportById(id);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("airport")
+    public ResponseEntity<List<AirportDto>> getAllAirports() {
+        List<AirportDto> response = airportService.getAllAirports();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

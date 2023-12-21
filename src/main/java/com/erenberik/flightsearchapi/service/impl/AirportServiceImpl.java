@@ -9,6 +9,9 @@ import com.erenberik.flightsearchapi.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AirportServiceImpl implements AirportService {
     private final AirportRepository airportRepository;
@@ -30,5 +33,16 @@ public class AirportServiceImpl implements AirportService {
         Airport airport = airportRepository.findById(id).orElseThrow(()-> new FlightNotFoundException("Flight could not be found!"));
 
         return AirportMapper.mapToDto(airport);
+    }
+
+    @Override
+    public List<AirportDto> getAllAirports() {
+        List<Airport> airport = airportRepository.findAll();
+
+        List<AirportDto> airportDtoList = airport.stream()
+                .map(AirportMapper::mapToDto)
+                .collect(Collectors.toList());
+
+        return airportDtoList;
     }
 }
