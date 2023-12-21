@@ -1,6 +1,7 @@
 package com.erenberik.flightsearchapi.service.impl;
 
 import com.erenberik.flightsearchapi.dto.AirportDto;
+import com.erenberik.flightsearchapi.exception.AirportNotFoundException;
 import com.erenberik.flightsearchapi.exception.FlightNotFoundException;
 import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.repository.AirportRepository;
@@ -30,7 +31,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public AirportDto getAirportById(int id) {
-        Airport airport = airportRepository.findById(id).orElseThrow(()-> new FlightNotFoundException("Flight could not be found!"));
+        Airport airport = airportRepository.findById(id).orElseThrow(()-> new AirportNotFoundException("Airport could not be found!"));
 
         return AirportMapper.mapToDto(airport);
     }
@@ -48,7 +49,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public AirportDto updateAirport(AirportDto airportDto, int id) {
-        Airport airport = airportRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+        Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
 
         airport.setId(airportDto.getId());
         airport.setCity(airportDto.getCity());
@@ -60,7 +61,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public void deleteAirport(int id) {
-        Airport airport = airportRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+        Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
         airportRepository.delete(airport);
     }
 }
