@@ -15,4 +15,5 @@ public class Airport {
     private int id;
 
     private String city;
+
 }
