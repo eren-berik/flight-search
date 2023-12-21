@@ -47,18 +47,17 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public FlightDto updateFlight(FlightDto flightDto, int id) {
-        Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+    public FlightDto updateFlight(Flight flight, int id) {
+        Flight findFlight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
 
-        flight.setId(flightDto.getId());
-        flight.setDepartureAirport(flightDto.getDepartureAirport());
-        flight.setArrivalAirport(flightDto.getArrivalAirport());
-        flight.setDepartureTime(flightDto.getDepartureTime());
-        flight.setArrivalTime(flightDto.getArrivalTime());
-        flight.setPrice(flightDto.getPrice());
+        findFlight.setDepartureAirport(flight.getDepartureAirport());
+        findFlight.setArrivalAirport(flight.getArrivalAirport());
+        findFlight.setDepartureTime(flight.getDepartureTime());
+        findFlight.setArrivalTime(flight.getArrivalTime());
+        findFlight.setPrice(flight.getPrice());
 
-        Flight updatedFlight = flightRepository.save(flight);
-
+        Flight updatedFlight = flightRepository.save(findFlight);
+        System.out.println(updatedFlight);
         return FlightMapper.mapToDto(updatedFlight);
     }
 

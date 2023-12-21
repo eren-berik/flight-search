@@ -9,6 +9,6 @@ public interface FlightService {
     FlightDto createFlight(Flight flight);
     FlightDto getFlightById(int id);
     List<FlightDto> getAllFlights();
-    FlightDto updateFlight(FlightDto flightDto, int id);
+    FlightDto updateFlight(Flight flight, int id);
     void deleteFlightById(int id);
 }
