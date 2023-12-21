@@ -14,6 +14,7 @@ public class FlightMapper {
         flightDto.setDepartureTime(flight.getDepartureTime());
         flightDto.setArrivalTime(flight.getArrivalTime());
         flightDto.setPrice(flight.getPrice());
+
         return flightDto;
     }
 }

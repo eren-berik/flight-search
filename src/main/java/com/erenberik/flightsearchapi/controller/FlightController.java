@@ -27,19 +27,21 @@ public class FlightController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<FlightDto> createFlight(
             @RequestBody Flight flight){
-        return new ResponseEntity<>(
-                flightService.createFlight(flight), HttpStatus.CREATED);
+
+        return new ResponseEntity<>(flightService.createFlight(flight), HttpStatus.CREATED);
     }
 
     @GetMapping("flight/{id}")
     public ResponseEntity<FlightDto> flightDetails(@PathVariable int id) {
         FlightDto response = flightService.getFlightById(id);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("flight/")
     public ResponseEntity<List<FlightDto>> getAllFlights() {
         List<FlightDto> response = flightService.getAllFlights();
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -49,12 +51,14 @@ public class FlightController {
             @PathVariable int id
     ){
         FlightDto response = flightService.updateFlight(flightDto, id);
+
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @DeleteMapping("flight/{id}")
     public ResponseEntity<String> deleteFlight(@PathVariable int id) {
         flightService.deleteFlightById(id);
+
         return new ResponseEntity<>("Flight deleted", HttpStatus.OK);
     }
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface FlightService {
     FlightDto createFlight(Flight flight);
-    List<FlightDto> getAllFlights();
     FlightDto getFlightById(int id);
+    List<FlightDto> getAllFlights();
     FlightDto updateFlight(FlightDto flightDto, int id);
     void deleteFlightById(int id);
 }
