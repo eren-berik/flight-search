@@ -10,6 +10,7 @@ import com.erenberik.flightsearchapi.mapper.AirportMapper;
 import com.erenberik.flightsearchapi.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public List<AirportResDTO> getAllAirports() {
-        Sort sort = Sort.by("city.plateCode");
+        Sort sort = Sort.by("city.cityCode");
 
         List<Airport> airport = airportRepository.findAll();
 
@@ -52,11 +53,11 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public AirportResDTO updateAirport(AirportUpdateReqDTO airportUpdateReqDTO, Long id) {
-        Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
         //todo: Need to check if that airport exist in DB if not proceed
-        Airport updatedAirport = airportRepository.save(airport);
+        Airport airport = airportMapper.mapToAirport(airportUpdateReqDTO);
+        airport = airportRepository.save(airport);
 
-        return airportMapper.mapToAirportResponseDTO(updatedAirport);
+        return airportMapper.mapToAirportResponseDTO(airport);
     }
 
     @Override

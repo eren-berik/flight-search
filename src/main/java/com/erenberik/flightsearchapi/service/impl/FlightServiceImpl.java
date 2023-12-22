@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,8 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightResDTO createFlight(FlightCreateReqDTO flightCreateReqDTO) {
-        //todo Check if flight with that id exists or not
         Flight flight = flightMapper.mapToFlight(flightCreateReqDTO);
+        flight = flightRepository.save(flight);
 
         return flightMapper.mapToFlightResDTO(flight);
     }
@@ -41,6 +42,7 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<FlightResDTO> getAllFlights() {
         List<Flight> flight = flightRepository.findAll();
+        flight.sort(Comparator.comparingLong(Flight::getId));
 
         return flight.stream()
                 .map(flightMapper::mapToFlightResDTO)
@@ -49,11 +51,17 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, Long id) {
-        flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found"));
+        Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+        Flight updateFlight = flightMapper.mapToFlight(flightUpdateReqDTO);
 
-        Flight flight = flightRepository.save(flightMapper.mapToFlight(flightUpdateReqDTO));
+        flight.setDepartureAirport(updateFlight.getDepartureAirport());
+        flight.setArrivalAirport(updateFlight.getArrivalAirport());
+        flight.setDepartureTime(updateFlight.getDepartureTime());
+        flight.setArrivalTime(updateFlight.getArrivalTime());
+        flight.setPrice(updateFlight.getPrice());
 
-        return flightMapper.mapToFlightResDTO(flight);
+        Flight saveUpdateFlight = flightRepository.save(flight);
+        return flightMapper.mapToFlightResDTO(saveUpdateFlight);
     }
 
     @Override
