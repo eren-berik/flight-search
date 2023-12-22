@@ -6,7 +6,6 @@ import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
 import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.model.Flight;
 import com.erenberik.flightsearchapi.service.AirportService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,8 @@ public class FlightMapper {
 
         return FlightResDTO.builder()
                 .id(flight.getId())
-                .departureAirportName(flight.getDepartureAirport().getAirportFullName())
-                .arrivalAirportName(flight.getArrivalAirport().getAirportFullName())
+                .departureAirportName(flight.getDepartureAirport().getAirportName())
+                .arrivalAirportName(flight.getArrivalAirport().getAirportName())
                 .departureTime(flight.getDepartureTime())
                 .arrivalTime(flight.getArrivalTime())
                 .price(flight.getPrice())
@@ -48,6 +47,7 @@ public class FlightMapper {
         Airport arrivalAirport = airportService.getAirportById(flightUpdateReqDTO.getArrivalAirportId());
 
         return Flight.builder()
+                .id(flightUpdateReqDTO.getId())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
                 .departureTime(flightUpdateReqDTO.getDepartureTime())

@@ -3,15 +3,16 @@ package com.erenberik.flightsearchapi.service.impl;
 import com.erenberik.flightsearchapi.dto.FlightCreateReqDTO;
 import com.erenberik.flightsearchapi.dto.FlightResDTO;
 import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
-import com.erenberik.flightsearchapi.exception.FlightNotFoundException;
-import com.erenberik.flightsearchapi.repository.AirportRepository;
+import com.erenberik.flightsearchapi.exception.AlreadyExistsException;
+import com.erenberik.flightsearchapi.exception.NotFoundException;
+import com.erenberik.flightsearchapi.exception.errors.FlightErrors;
 import com.erenberik.flightsearchapi.repository.FlightRepository;
 import com.erenberik.flightsearchapi.service.FlightService;
 import com.erenberik.flightsearchapi.model.Flight;
 import com.erenberik.flightsearchapi.mapper.FlightMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,6 +27,9 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightResDTO createFlight(FlightCreateReqDTO flightCreateReqDTO) {
+        //Check might add here but is it possible that multiple flights share exactly same values rather than id?
+        //EXAMPLE CASE -> Airport with multiple runways may allow multiple flights at the same time so theoretically above
+        //statement is possible.
         Flight flight = flightMapper.mapToFlight(flightCreateReqDTO);
         flight = flightRepository.save(flight);
 
@@ -34,7 +38,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightResDTO getFlightById(Long id) {
-        Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+        Flight flight = flightRepository.findById(id).orElseThrow(() -> new NotFoundException(FlightErrors.FLIGHT_NOT_FOUND));
 
         return flightMapper.mapToFlightResDTO(flight);
     }
@@ -50,23 +54,29 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, Long id) {
-        Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
-        Flight updateFlight = flightMapper.mapToFlight(flightUpdateReqDTO);
+    public FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, @PathVariable Long id) {
+        if (!isExistsById(id)) {
+            throw new NotFoundException(FlightErrors.FLIGHT_NOT_FOUND);
+        }
 
-        flight.setDepartureAirport(updateFlight.getDepartureAirport());
-        flight.setArrivalAirport(updateFlight.getArrivalAirport());
-        flight.setDepartureTime(updateFlight.getDepartureTime());
-        flight.setArrivalTime(updateFlight.getArrivalTime());
-        flight.setPrice(updateFlight.getPrice());
+        flightUpdateReqDTO.setId(id);
+        Flight flight = flightMapper.mapToFlight(flightUpdateReqDTO);
+        flight = flightRepository.save(flight);
 
-        Flight saveUpdateFlight = flightRepository.save(flight);
-        return flightMapper.mapToFlightResDTO(saveUpdateFlight);
+        return flightMapper.mapToFlightResDTO(flight);
     }
 
     @Override
     public void deleteFlightById(Long id) {
-        //todo: Check if flight with that id exists or not
+        if (!isExistsById(id)) {
+            throw new AlreadyExistsException(FlightErrors.FLIGHT_NOT_FOUND);
+        }
+
         flightRepository.deleteById(id);
+    }
+
+    //Helper methods
+    private boolean isExistsById(Long id) {
+        return flightRepository.existsById(id);
     }
 }
