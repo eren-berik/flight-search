@@ -4,6 +4,9 @@ import com.erenberik.flightsearchapi.dto.AirportCreateReqDTO;
 import com.erenberik.flightsearchapi.dto.AirportResDTO;
 import com.erenberik.flightsearchapi.dto.AirportUpdateReqDTO;
 import com.erenberik.flightsearchapi.exception.AirportNotFoundException;
+import com.erenberik.flightsearchapi.exception.AlreadyExistsException;
+import com.erenberik.flightsearchapi.exception.BaseErrorMsg;
+import com.erenberik.flightsearchapi.exception.errors.AirportErrors;
 import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.repository.AirportRepository;
 import com.erenberik.flightsearchapi.mapper.AirportMapper;
@@ -25,6 +28,14 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public AirportResDTO createAirport(AirportCreateReqDTO airportCreateReqDTO) {
+
+        String airportName = airportCreateReqDTO.getName();
+        Integer cityCode = airportCreateReqDTO.getCityCode();
+
+        if (isAirportExist(airportName, cityCode)) {
+            throw new AlreadyExistsException(AirportErrors.ALREADY_IN_USE);
+        }
+
         Airport airport = airportMapper.mapToAirport(airportCreateReqDTO);
 
         airport = airportRepository.save(airport);
@@ -64,5 +75,9 @@ public class AirportServiceImpl implements AirportService {
     public void deleteAirport(Long id) {
         Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
         airportRepository.delete(airport);
+    }
+
+    private boolean isAirportExist(String airportName, Integer cityCode) {
+        return airportRepository.existsAirportByAirportNameAndCityCode(airportName, cityCode);
     }
 }
