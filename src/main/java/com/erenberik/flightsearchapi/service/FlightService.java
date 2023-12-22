@@ -1,14 +1,16 @@
 package com.erenberik.flightsearchapi.service;
 
+import com.erenberik.flightsearchapi.dto.FlightCreateReqDTO;
+import com.erenberik.flightsearchapi.dto.FlightResDTO;
+import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
 import com.erenberik.flightsearchapi.model.Flight;
-import com.erenberik.flightsearchapi.dto.FlightDto;
 
 import java.util.List;
 
 public interface FlightService {
-    FlightDto createFlight(Flight flight);
-    FlightDto getFlightById(int id);
-    List<FlightDto> getAllFlights();
-    FlightDto updateFlight(Flight flight, int id);
-    void deleteFlightById(int id);
+    FlightResDTO createFlight(FlightCreateReqDTO flightCreateReqDTO);
+    List<FlightResDTO> getAllFlights();
+    FlightResDTO getFlightById(Long id);
+    FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, Long id);
+    void deleteFlightById(Long id);
 }

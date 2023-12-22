@@ -1,9 +1,11 @@
 package com.erenberik.flightsearchapi.controller;
 
+import com.erenberik.flightsearchapi.dto.FlightCreateReqDTO;
+import com.erenberik.flightsearchapi.dto.FlightResDTO;
+import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
 import com.erenberik.flightsearchapi.service.FlightService;
 import com.erenberik.flightsearchapi.model.Flight;
-import com.erenberik.flightsearchapi.service.FlightService;
-import com.erenberik.flightsearchapi.dto.FlightDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,50 +17,42 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
+@RequiredArgsConstructor
 public class FlightController {
     private final FlightService flightService;
 
-    @Autowired
-    public FlightController(FlightService flightService) {
-        this.flightService = flightService;
+    @GetMapping("flight")
+    public ResponseEntity<List<FlightResDTO>> getAllFlights() {
+        List <FlightResDTO> flightResDTOList = flightService.getAllFlights();
+
+        return new ResponseEntity<>(flightResDTOList, HttpStatus.OK);
     }
 
     @PostMapping("flight")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<FlightDto> createFlight(
-            @RequestBody Flight flight){
+    public ResponseEntity<FlightResDTO> createFlight(@RequestBody FlightCreateReqDTO flightCreateReqDTO){
 
-        return new ResponseEntity<>(flightService.createFlight(flight), HttpStatus.CREATED);
+        return new ResponseEntity<>(flightService.createFlight(flightCreateReqDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("flight/{id}")
-    public ResponseEntity<FlightDto> flightDetails(@PathVariable int id) {
-        FlightDto response = flightService.getFlightById(id);
+    public ResponseEntity<FlightResDTO> getFlightById(@PathVariable Long id) {
+        FlightResDTO flightResDTO = flightService.getFlightById(id);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("flight/")
-    public ResponseEntity<List<FlightDto>> getAllFlights() {
-        List<FlightDto> response = flightService.getAllFlights();
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(flightResDTO, HttpStatus.OK);
     }
 
     @PutMapping("flight/{id}")
-    public ResponseEntity<FlightDto> updateFlight(
-            @RequestBody Flight flight,
-            @PathVariable int id
-    ){
-        FlightDto response = flightService.updateFlight(flight, id);
+    public ResponseEntity<FlightResDTO> updateFlight(@RequestBody FlightUpdateReqDTO flightUpdateReqDTO, @PathVariable Long id){
+        FlightResDTO flightResDTO = flightService.updateFlight(flightUpdateReqDTO, id);
 
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(flightResDTO,HttpStatus.OK);
     }
 
     @DeleteMapping("flight/{id}")
-    public ResponseEntity<String> deleteFlight(@PathVariable int id) {
+    public ResponseEntity<String> deleteFlight(@PathVariable Long id) {
         flightService.deleteFlightById(id);
 
-        return new ResponseEntity<>("Flight deleted", HttpStatus.OK);
+        return new ResponseEntity<>("Flight deleted!", HttpStatus.OK);
     }
 }

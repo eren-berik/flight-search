@@ -1,11 +1,15 @@
 package com.erenberik.flightsearchapi.service.impl;
 
+import com.erenberik.flightsearchapi.dto.FlightCreateReqDTO;
+import com.erenberik.flightsearchapi.dto.FlightResDTO;
+import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
 import com.erenberik.flightsearchapi.exception.FlightNotFoundException;
+import com.erenberik.flightsearchapi.repository.AirportRepository;
 import com.erenberik.flightsearchapi.repository.FlightRepository;
 import com.erenberik.flightsearchapi.service.FlightService;
 import com.erenberik.flightsearchapi.model.Flight;
-import com.erenberik.flightsearchapi.dto.FlightDto;
 import com.erenberik.flightsearchapi.mapper.FlightMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,57 +17,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FlightServiceImpl implements FlightService {
+
     private final FlightRepository flightRepository;
+    private final FlightMapper flightMapper;
 
-    @Autowired
-    public FlightServiceImpl(FlightRepository flightRepository) {
-        this.flightRepository = flightRepository;
+    @Override
+    public FlightResDTO createFlight(FlightCreateReqDTO flightCreateReqDTO) {
+        //todo Check if flight with that id exists or not
+        Flight flight = flightMapper.mapToFlight(flightCreateReqDTO);
+
+        return flightMapper.mapToFlightResDTO(flight);
     }
 
     @Override
-    public FlightDto createFlight(Flight flight) {
-        Flight newFlight = flightRepository.save(flight);
-
-        return FlightMapper.mapToDto(newFlight);
-    }
-
-    @Override
-    public FlightDto getFlightById(int id) {
+    public FlightResDTO getFlightById(Long id) {
         Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
 
-        return FlightMapper.mapToDto(flight);
+        return flightMapper.mapToFlightResDTO(flight);
     }
 
     @Override
-    public List<FlightDto> getAllFlights() {
+    public List<FlightResDTO> getAllFlights() {
         List<Flight> flight = flightRepository.findAll();
 
-        List<FlightDto> flightDtoList = flight.stream()
-                .map(FlightMapper::mapToDto)
+        return flight.stream()
+                .map(flightMapper::mapToFlightResDTO)
                 .collect(Collectors.toList());
-
-        return flightDtoList;
     }
 
     @Override
-    public FlightDto updateFlight(Flight flight, int id) {
-        Flight findFlight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found!"));
+    public FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, Long id) {
+        flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found"));
 
-        findFlight.setDepartureAirport(flight.getDepartureAirport());
-        findFlight.setArrivalAirport(flight.getArrivalAirport());
-        findFlight.setDepartureTime(flight.getDepartureTime());
-        findFlight.setArrivalTime(flight.getArrivalTime());
-        findFlight.setPrice(flight.getPrice());
+        Flight flight = flightRepository.save(flightMapper.mapToFlight(flightUpdateReqDTO));
 
-        Flight updatedFlight = flightRepository.save(findFlight);
-        System.out.println(updatedFlight);
-        return FlightMapper.mapToDto(updatedFlight);
+        return flightMapper.mapToFlightResDTO(flight);
     }
 
     @Override
-    public void deleteFlightById(int id) {
-        Flight flight = flightRepository.findById(id).orElseThrow(() -> new FlightNotFoundException("Flight could not be found"));
-        flightRepository.delete(flight);
+    public void deleteFlightById(Long id) {
+        //todo: Check if flight with that id exists or not
+        flightRepository.deleteById(id);
     }
 }

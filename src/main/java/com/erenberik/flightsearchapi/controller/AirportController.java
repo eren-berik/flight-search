@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/")
 @RequiredArgsConstructor
 public class AirportController {
+
     private final AirportService airportService;
 
     @GetMapping("airport")
@@ -26,19 +27,19 @@ public class AirportController {
         return new ResponseEntity<>(airportResDTOList, HttpStatus.OK);
     }
 
-    @PostMapping("airport/")
+    @PostMapping("airport")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AirportResDTO> createAirport(@RequestBody AirportCreateReqDTO airportCreateReqDTO) {
-        AirportResDTO response = airportService.createAirport(airportCreateReqDTO);
+        AirportResDTO airportResDTO = airportService.createAirport(airportCreateReqDTO);
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(airportResDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("airport/{id}")
     public ResponseEntity<AirportResDTO> updateAirport(@RequestBody AirportUpdateReqDTO airportUpdateReqDTO, @PathVariable long id) {
-        AirportResDTO response = airportService.updateAirport(airportUpdateReqDTO, id);
+        AirportResDTO airportResDTO = airportService.updateAirport(airportUpdateReqDTO, id);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(airportResDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("airport/{id}")

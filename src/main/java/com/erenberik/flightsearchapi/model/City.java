@@ -2,14 +2,11 @@ package com.erenberik.flightsearchapi.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Getter
+@Setter
 public class City {
 
     @Id
