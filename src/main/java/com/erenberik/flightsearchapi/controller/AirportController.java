@@ -43,7 +43,9 @@ public class AirportController {
     }
 
     @DeleteMapping("airport/{id}")
-    public void deleteAirport(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAirport(@PathVariable Long id) {
         airportService.deleteAirport(id);
+
+        return new ResponseEntity<>("Airport deleted successfully.", HttpStatus.OK);
     }
 }

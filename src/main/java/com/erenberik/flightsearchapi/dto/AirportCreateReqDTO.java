@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class AirportCreateReqDTO {
     private String name;
-    private Integer plateCode;
+    private Integer cityCode;
 }
