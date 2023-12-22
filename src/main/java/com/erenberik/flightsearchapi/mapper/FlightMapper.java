@@ -47,6 +47,7 @@ public class FlightMapper {
         Airport arrivalAirport = airportService.getAirportById(flightUpdateReqDTO.getArrivalAirportId());
 
         return Flight.builder()
+                .id(flightUpdateReqDTO.getId())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
                 .departureTime(flightUpdateReqDTO.getDepartureTime())

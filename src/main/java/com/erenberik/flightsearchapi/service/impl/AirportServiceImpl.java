@@ -3,9 +3,7 @@ package com.erenberik.flightsearchapi.service.impl;
 import com.erenberik.flightsearchapi.dto.AirportCreateReqDTO;
 import com.erenberik.flightsearchapi.dto.AirportResDTO;
 import com.erenberik.flightsearchapi.dto.AirportUpdateReqDTO;
-import com.erenberik.flightsearchapi.exception.AirportNotFoundException;
 import com.erenberik.flightsearchapi.exception.AlreadyExistsException;
-import com.erenberik.flightsearchapi.exception.BaseErrorMsg;
 import com.erenberik.flightsearchapi.exception.NotFoundException;
 import com.erenberik.flightsearchapi.exception.errors.AirportErrors;
 import com.erenberik.flightsearchapi.model.Airport;
@@ -14,7 +12,6 @@ import com.erenberik.flightsearchapi.mapper.AirportMapper;
 import com.erenberik.flightsearchapi.service.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -83,8 +80,7 @@ public class AirportServiceImpl implements AirportService {
             throw new AlreadyExistsException(AirportErrors.AIRPORT_NOT_FOUND);
         }
 
-        Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
-        airportRepository.delete(airport);
+        airportRepository.deleteById(id);
     }
 
     //Helper methods
