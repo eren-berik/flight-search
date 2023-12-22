@@ -6,6 +6,7 @@ import com.erenberik.flightsearchapi.dto.AirportUpdateReqDTO;
 import com.erenberik.flightsearchapi.exception.AirportNotFoundException;
 import com.erenberik.flightsearchapi.exception.AlreadyExistsException;
 import com.erenberik.flightsearchapi.exception.BaseErrorMsg;
+import com.erenberik.flightsearchapi.exception.NotFoundException;
 import com.erenberik.flightsearchapi.exception.errors.AirportErrors;
 import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.repository.AirportRepository;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,15 +31,14 @@ public class AirportServiceImpl implements AirportService {
     @Override
     public AirportResDTO createAirport(AirportCreateReqDTO airportCreateReqDTO) {
 
-        String airportName = airportCreateReqDTO.getName();
+        String name = airportCreateReqDTO.getName();
         Integer cityCode = airportCreateReqDTO.getCityCode();
 
-        if (isAirportExist(airportName, cityCode)) {
+        if (isAirportExist(name, cityCode)) {
             throw new AlreadyExistsException(AirportErrors.ALREADY_IN_USE);
         }
 
         Airport airport = airportMapper.mapToAirport(airportCreateReqDTO);
-
         airport = airportRepository.save(airport);
 
         return airportMapper.mapToAirportResponseDTO(airport);
@@ -46,7 +47,7 @@ public class AirportServiceImpl implements AirportService {
     @Override
     public Airport getAirportById(Long id) {
         return airportRepository.findById(id)
-                .orElseThrow(() -> new AirportNotFoundException("Airport not found!"));
+                .orElseThrow(() -> new NotFoundException(AirportErrors.AIRPORT_NOT_FOUND));
     }
 
     @Override
@@ -63,8 +64,12 @@ public class AirportServiceImpl implements AirportService {
     }
 
     @Override
-    public AirportResDTO updateAirport(AirportUpdateReqDTO airportUpdateReqDTO, Long id) {
-        //todo: Need to check if that airport exist in DB if not proceed
+    public AirportResDTO updateAirport(AirportUpdateReqDTO airportUpdateReqDTO, @PathVariable Long id) {
+
+        if (!isExistsById(id)) {
+            throw new AlreadyExistsException(AirportErrors.AIRPORT_NOT_FOUND);
+        }
+
         Airport airport = airportMapper.mapToAirport(airportUpdateReqDTO);
         airport = airportRepository.save(airport);
 
@@ -73,11 +78,21 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public void deleteAirport(Long id) {
+
+        if (!isExistsById(id)) {
+            throw new AlreadyExistsException(AirportErrors.AIRPORT_NOT_FOUND);
+        }
+
         Airport airport = airportRepository.findById(id).orElseThrow(() -> new AirportNotFoundException("Airport could not be found!"));
         airportRepository.delete(airport);
     }
 
-    private boolean isAirportExist(String airportName, Integer cityCode) {
-        return airportRepository.existsAirportByAirportNameAndCityCode(airportName, cityCode);
+    //Helper methods
+    private boolean isAirportExist(String name, Integer cityCode) {
+        return airportRepository.existsByNameAndCity_CityCode(name, cityCode);
+    }
+
+    private boolean isExistsById(Long id) {
+        return airportRepository.existsById(id);
     }
 }

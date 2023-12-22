@@ -22,7 +22,6 @@ public class Airport {
     )
     private City city;
 
-    public String getAirportFullName() {
-        return String.format("%s - %s", getCity().getName(), getName());
+    public String getAirportName() {return String.format("%s - %s", getCity().getName(), getName());
     }
 }
