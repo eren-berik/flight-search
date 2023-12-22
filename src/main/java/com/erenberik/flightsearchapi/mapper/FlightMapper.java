@@ -1,20 +1,60 @@
 package com.erenberik.flightsearchapi.mapper;
 
-import com.erenberik.flightsearchapi.dto.FlightDto;
+import com.erenberik.flightsearchapi.dto.FlightCreateReqDTO;
+import com.erenberik.flightsearchapi.dto.FlightResDTO;
+import com.erenberik.flightsearchapi.dto.FlightUpdateReqDTO;
+import com.erenberik.flightsearchapi.model.Airport;
 import com.erenberik.flightsearchapi.model.Flight;
+import com.erenberik.flightsearchapi.service.AirportService;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
+@Component
+@RequiredArgsConstructor
 public class FlightMapper {
-    public static FlightDto mapToDto(Flight flight) {
-        FlightDto flightDto = new FlightDto();
-        flightDto.setId(flight.getId());
-        flightDto.setDepartureAirport(flight.getDepartureAirport());
-        flightDto.setArrivalAirport(flight.getArrivalAirport());
-        flightDto.setDepartureTime(flight.getDepartureTime());
-        flightDto.setArrivalTime(flight.getArrivalTime());
-        flightDto.setPrice(flight.getPrice());
 
-        return flightDto;
+    private final AirportService airportService;
+
+    public FlightResDTO mapToFlightResDTO(Flight flight) {
+
+        return FlightResDTO.builder()
+                .id(flight.getId())
+                .departureAirportName(flight.getDepartureAirport().getAirportFullName())
+                .arrivalAirportName(flight.getArrivalAirport().getAirportFullName())
+                .departureTime(flight.getDepartureTime())
+                .arrivalTime(flight.getArrivalTime())
+                .price(flight.getPrice())
+                .build();
     }
+
+    public Flight mapToFlight(FlightCreateReqDTO flightCreateReqDTO) {
+
+        Airport departureAirport = airportService.getAirportById(flightCreateReqDTO.getDepartureAirportId());
+        Airport arrivalAirport = airportService.getAirportById(flightCreateReqDTO.getArrivalAirportId());
+
+        return Flight.builder()
+                .departureAirport(departureAirport)
+                .arrivalAirport(arrivalAirport)
+                .price(flightCreateReqDTO.getPrice())
+                .departureTime(flightCreateReqDTO.getDepartureTime())
+                .arrivalTime(flightCreateReqDTO.getArrivalTime())
+                .build();
+    }
+
+    public Flight mapToFlight(FlightUpdateReqDTO flightUpdateReqDTO) {
+
+        Airport departureAirport = airportService.getAirportById(flightUpdateReqDTO.getDepartureAirportId());
+        Airport arrivalAirport = airportService.getAirportById(flightUpdateReqDTO.getArrivalAirportId());
+
+        return Flight.builder()
+                .id(flightUpdateReqDTO.getId())
+                .departureAirport(departureAirport)
+                .arrivalAirport(arrivalAirport)
+                .departureTime(flightUpdateReqDTO.getDepartureTime())
+                .arrivalTime(flightUpdateReqDTO.getArrivalTime())
+                .price(flightUpdateReqDTO.getPrice())
+                .build();
+    }
+
 }
