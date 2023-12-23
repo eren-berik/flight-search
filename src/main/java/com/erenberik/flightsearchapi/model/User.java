@@ -1,11 +1,14 @@
 package com.erenberik.flightsearchapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+//todo: remove getter setter after jwt auth
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users") //PostgreSQL don't allow user as table name
 @Entity
 public class User {

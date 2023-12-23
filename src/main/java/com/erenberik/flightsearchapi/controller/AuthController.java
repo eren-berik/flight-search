@@ -1,5 +1,6 @@
 package com.erenberik.flightsearchapi.controller;
 
+import com.erenberik.flightsearchapi.dto.LoginReqDTO;
 import com.erenberik.flightsearchapi.dto.RestResponse;
 import com.erenberik.flightsearchapi.dto.SignUpReqDTO;
 import com.erenberik.flightsearchapi.service.UserService;
@@ -17,6 +18,13 @@ public class AuthController {
     @PostMapping("signup")
     public ResponseEntity<RestResponse<Void>> signUpUser(@RequestBody SignUpReqDTO signUpReqDTO) {
         userService.signUpUser(signUpReqDTO);
+
+        return ResponseEntity.ok(RestResponse.empty());
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<RestResponse<String>> login(@RequestBody LoginReqDTO loginReqDTO) {
+        userService.login(loginReqDTO);
 
         return ResponseEntity.ok(RestResponse.empty());
     }
