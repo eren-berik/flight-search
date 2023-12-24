@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class FlightSearchResDTO {
-    List<FlightResDTO> outboundFlights;
-    List<FlightResDTO> inboundFlights;
+    List<FlightResDTO> flights;
+    //List<FlightResDTO> inboundFlights;
 }
