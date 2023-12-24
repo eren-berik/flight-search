@@ -23,29 +23,26 @@ public class FlightSearchServiceImpl implements FlightSearchService {
     public FlightSearchResDTO flightSearch(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, Optional<LocalDate> returnTime) {
 
         if (returnTime != null && returnTime.isPresent()) {
-            return searchFlights(departureAirportId, arrivalAirportId, departureTime, returnTime);
+            return searchRoundTripFlight(departureAirportId, arrivalAirportId, departureTime, returnTime.get());
         } else {
-            return searchFlights(departureAirportId, arrivalAirportId, departureTime, Optional.empty());
+            return searchOneWayFlight(departureAirportId, arrivalAirportId, departureTime);
         }
 
     }
 
-    private FlightSearchResDTO searchFlights(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, Optional<LocalDate> returnTime) {
+    private FlightSearchResDTO searchOneWayFlight(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime) {
 
-        List<FlightResDTO> flights = flightService.findAllByArrivalAirport_IdAndDepartureAirport_IdAndDepartureTimeBetweenOrderByDepartureTime
-                (departureAirportId, arrivalAirportId, departureTime, Optional.of(returnTime));
+        List<FlightResDTO> outboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
 
-        return flightSearchMapper.mapToFlightSearchResDTO(flights);
+        return flightSearchMapper.mapToFlightSearchResDTO(outboundFlights);
 
     }
 
-    /*private FlightSearchResDTO searchRoundTripFlight(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, LocalDate returnTime) {
+    private FlightSearchResDTO searchRoundTripFlight(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, LocalDate returnTime) {
 
-        //todo: Implement findByDepartureAirportIdAndArrivalAirportIdAndDepartureTime in the flight service
         List<FlightResDTO> outboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
         List<FlightResDTO> inboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(arrivalAirportId, departureAirportId, returnTime);
 
-        //todo: Implement flightSearchMapper
-        return flightSearchMapper.mapToFlightSearchResponseDTO(outboundFlights, inboundFlights);
-    }*/
+        return flightSearchMapper.mapToFlightSearchResDTO(outboundFlights, inboundFlights);
+    }
 }

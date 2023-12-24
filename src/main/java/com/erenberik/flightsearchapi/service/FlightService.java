@@ -14,5 +14,5 @@ public interface FlightService {
     FlightResDTO getFlightById(Long id);
     FlightResDTO updateFlight(FlightUpdateReqDTO flightUpdateReqDTO, Long id);
     void deleteFlightById(Long id);
-    <T> List<FlightResDTO> findAllByArrivalAirport_IdAndDepartureAirport_IdAndDepartureTimeBetweenOrderByDepartureTime(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, Optional<T> returnTime);
+    List<FlightResDTO> findByDepartureIdAndArrivalIdAndDepartureTime(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime);
 }

@@ -9,24 +9,18 @@ import java.util.Optional;
 
 @Component
 public class FlightSearchMapper {
-
-    public FlightSearchResDTO mapToFlightSearchResDTO(List<FlightResDTO> flights) {
-
+    public FlightSearchResDTO mapToFlightSearchResDTO(List<FlightResDTO> outboundFlights, List<FlightResDTO> inboundFlights) {
         return FlightSearchResDTO.builder()
-                .flights(flights)
+                .outboundFlights(outboundFlights)
+                .inboundFlights(inboundFlights)
                 .build();
-
-        /*if (inboundFlights.isPresent()) {
-
-            return FlightSearchResDTO.builder()
-                    .outboundFlights(outboundFlights)
-                    .inboundFlights(inboundFlights.get())
-                    .build();
-        } else {
-
-            return FlightSearchResDTO.builder()
-                    .outboundFlights(outboundFlights)
-                    .build();
-        }*/
     }
+
+    public FlightSearchResDTO mapToFlightSearchResDTO(List<FlightResDTO> outboundFlights) {
+        return FlightSearchResDTO.builder()
+                .outboundFlights(outboundFlights)
+                .inboundFlights(List.of())
+                .build();
+    }
+
 }
