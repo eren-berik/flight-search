@@ -15,9 +15,9 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    private String APP_KEY = "SkRrYL4j4nG6P6SMmwNJBDfRbyrip1BFTOcf8g46sLWd92ytDoyyz3xzyBnaY4csnD1BGLnrmJss8qsPtbL9zPeHkwEx7f1y";
+    private String APP_KEY = "{{APP_KEY_FROM_ENV_HERE}}";
 
-    private Long EXPIRE_TIME = 86400000L;
+    private Long EXPIRE_TIME = "{{EXPIRE_TIME_FROM_ENV_HERE}}";
 
     public String generateJwtToken(Authentication authentication) {
 
