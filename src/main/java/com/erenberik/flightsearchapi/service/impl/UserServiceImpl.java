@@ -11,6 +11,7 @@ import com.erenberik.flightsearchapi.repository.UserRepository;
 import com.erenberik.flightsearchapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User findByUsername(String username) {
@@ -28,9 +30,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signUpUser(SignUpReqDTO signUpReqDTO) {
+
         User user = new User();
         user.setUsername(signUpReqDTO.getUsername());
-        user.setPassword(signUpReqDTO.getPassword()); //todo:need to encode password
+        user.setPassword(passwordEncoder.encode(signUpReqDTO.getPassword()));
         user.setEmail(signUpReqDTO.getEmail());
 
         userRepository.save(user);
