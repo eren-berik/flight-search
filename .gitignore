@@ -62,3 +62,5 @@ out/
 ### VS Code ###
 .vscode/
 >>>>>>> cc76708 (Add CRUD for flight)
+
+.env

@@ -32,7 +32,7 @@ public class FlightSearchServiceImpl implements FlightSearchService {
 
     private FlightSearchResDTO searchOneWayFlight(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime) {
 
-        List<FlightResDTO> outboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
+        List<FlightResDTO> outboundFlights = flightService.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
 
         return flightSearchMapper.mapToFlightSearchResDTO(outboundFlights);
 
@@ -40,8 +40,8 @@ public class FlightSearchServiceImpl implements FlightSearchService {
 
     private FlightSearchResDTO searchRoundTripFlight(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime, LocalDate returnTime) {
 
-        List<FlightResDTO> outboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
-        List<FlightResDTO> inboundFlights = flightService.findByDepartureIdAndArrivalIdAndDepartureTime(arrivalAirportId, departureAirportId, returnTime);
+        List<FlightResDTO> outboundFlights = flightService.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTime(departureAirportId, arrivalAirportId, departureTime);
+        List<FlightResDTO> inboundFlights = flightService.findByDepartureAirportIdAndArrivalAirportIdAndDepartureTime(arrivalAirportId, departureAirportId, returnTime);
 
         return flightSearchMapper.mapToFlightSearchResDTO(outboundFlights, inboundFlights);
     }

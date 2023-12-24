@@ -80,7 +80,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<FlightResDTO> findByDepartureIdAndArrivalIdAndDepartureTime(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime) {
+    public List<FlightResDTO> findByDepartureAirportIdAndArrivalAirportIdAndDepartureTime(Long departureAirportId, Long arrivalAirportId, LocalDate departureTime) {
 
         LocalDateTime startDate = LocalDateTime.of(departureTime, LocalTime.of(0, 0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(departureTime.plusDays(1), LocalTime.of(0, 0, 0, 0));
